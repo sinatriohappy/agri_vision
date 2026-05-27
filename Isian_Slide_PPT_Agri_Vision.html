@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Isian Slide PPT — Agri Vision</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --green: #166534;
+    --green-light: #dcfce7;
+    --green-mid: #22c55e;
+    --blue: #1e40af;
+    --blue-light: #dbeafe;
+    --gray: #374151;
+    --gray-light: #f3f4f6;
+    --gray-border: #d1d5db;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 11pt;
+    line-height: 1.65;
+    color: #1f2937;
+    max-width: 210mm;
+    margin: 0 auto;
+    padding: 15mm;
+    background: white;
+  }
+
+  @media print {
+    body { padding: 0; margin: 0; font-size: 10.5pt; }
+    .no-print { display: none !important; }
+    .page-break { page-break-before: always; }
+    h2 { page-break-after: avoid; }
+    table { page-break-inside: avoid; }
+  }
+
+  /* ── Print Banner ── */
+  .print-banner {
+    background: linear-gradient(135deg, #1e40af, #3b82f6);
+    color: white;
+    padding: 16px 24px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .print-banner:hover { opacity: 0.9; }
+
+  /* ── Cover/Header ── */
+  .header {
+    text-align: center;
+    padding: 30px 20px;
+    border: 3px solid var(--blue);
+    border-radius: 16px;
+    margin-bottom: 30px;
+    background: linear-gradient(180deg, var(--blue-light) 0%, white 100%);
+  }
+  .header h1 { font-size: 22pt; color: var(--blue); margin-bottom: 10px; }
+  .header p { color: var(--gray); font-size: 11pt; }
+
+  /* ── Sections ── */
+  h2 {
+    font-size: 14pt;
+    color: white;
+    background: var(--blue);
+    padding: 8px 16px;
+    border-radius: 8px;
+    margin: 30px 0 16px;
+    display: inline-block;
+  }
+
+  h3 {
+    font-size: 12pt;
+    color: var(--blue);
+    margin: 20px 0 10px;
+    border-bottom: 2px solid var(--blue-light);
+    padding-bottom: 4px;
+  }
+
+  /* ── Content Blocks ── */
+  .content-box {
+    background: var(--gray-light);
+    border-left: 5px solid var(--blue);
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+
+  .content-box p { margin-bottom: 10px; }
+  .content-box p:last-child { margin-bottom: 0; }
+  .content-box ul, .content-box ol { padding-left: 20px; margin-bottom: 10px; }
+  .content-box li { margin-bottom: 6px; }
+
+  /* ── Tables ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 10pt;
+    background: white;
+  }
+  th {
+    background: var(--blue);
+    color: white;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    border: 1px solid var(--blue);
+  }
+  td {
+    padding: 10px 14px;
+    border: 1px solid var(--gray-border);
+    vertical-align: top;
+  }
+  tr:nth-child(even) { background: #f8fafc; }
+
+  .highlight {
+    background: #fef08a;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  
+  code {
+    background: #e2e8f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', monospace;
+    font-size: 10pt;
+    color: #b91c1c;
+  }
+
+  .footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--gray-border);
+    text-align: center;
+    font-size: 9pt;
+    color: var(--gray);
+  }
+</style>
+</head>
+<body>
+
+<div class="print-banner no-print" onclick="window.print()">
+  🖨️ <strong>Klik di sini untuk Print / Save as PDF</strong> (atau tekan Ctrl+P)
+</div>
+
+<div class="header">
+  <h1>📋 Teks Isian Presentasi (PPT)</h1>
+  <p><strong>Capstone Project: Agri Vision</strong></p>
+  <p style="font-size: 10pt; margin-top: 10px;"><em>Salin teks di bawah ini ke dalam template slide PowerPoint Anda. Seluruh data disesuaikan dengan hasil pelatihan model secara nyata.</em></p>
+</div>
+
+<!-- ========================================== -->
+<h2>📌 Slide 8: Eksplorasi Data (Tabel)</h2>
+<p>Isi tabel pada slide dengan data berikut:</p>
+
+<table>
+  <tr>
+    <th style="width: 5%;">No</th>
+    <th style="width: 35%;">Nama Parameter</th>
+    <th style="width: 20%;">Status (Input/Output)</th>
+    <th style="width: 40%;">Tipe Data (Nominal/Numerik)</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td><strong>Citra Daun Padi</strong><br><span style="font-size: 9pt; color: #64748b;">(Resolusi RGB 224&times;224 piksel)</span></td>
+    <td>Input</td>
+    <td><strong>Numerik</strong><br><span style="font-size: 9pt; color: #64748b;">(Matriks piksel dengan nilai intensitas warna 0&ndash;255 per channel)</span></td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td><strong>Label Kelas Penyakit</strong></td>
+    <td>Output</td>
+    <td><strong>Nominal</strong><br><span style="font-size: 9pt; color: #64748b;">(4 Kategori diskrit tanpa urutan: Healthy, Brown Spot, Leaf Blast, Tungro)</span></td>
+  </tr>
+</table>
+
+<!-- ========================================== -->
+<h2>📌 Slide 11: Eksplorasi Data (Pilihan Metode)</h2>
+<p>Setelah melihat fitur dan class, maka pilihan metode yang digunakan adalah:</p>
+
+<div class="content-box">
+  <h3>Klasifikasi (Classification)</h3>
+  <p><strong>Alasan:</strong></p>
+  <ol>
+    <li>Data target (output) berupa <strong>label kategorikal nominal</strong> (4 kelas penyakit yang bersifat diskrit), sehingga permasalahan ini secara alami masuk dalam domain klasifikasi multikelas (*multi-class classification*).</li>
+    <li>Input sistem merupakan <strong>data citra tidak terstruktur (gambar)</strong> yang membutuhkan ekstraksi fitur spasial kompleks. Oleh karena itu, pendekatan klasifikasi menggunakan <strong>Deep Learning (Convolutional Neural Network)</strong> merupakan pilihan yang paling optimal dan akurat.</li>
+  </ol>
+</div>
+
+<!-- ========================================== -->
+<div class="page-break"></div>
+<h2>📌 Slide 12: Modelling</h2>
+
+<div class="content-box">
+  <h3>Algoritma apa yang ingin Anda gunakan untuk menghasilkan model:</h3>
+  <p><strong>Deep Learning: MobileNetV2 dengan Transfer Learning</strong></p>
+  <ul>
+    <li>Model menggunakan arsitektur <strong>MobileNetV2</strong> sebagai <em>feature extractor</em>. Arsitektur ini dipilih karena memiliki parameter yang sangat efisien, sehingga komputasinya ringan dan optimal untuk di-<em>deploy</em> pada aplikasi web tanpa mengorbankan akurasi.</li>
+    <li>Menerapkan teknik <strong>Transfer Learning</strong>, memanfaatkan bobot pra-latih (<em>pre-trained weights</em>) dari jutaan gambar (ImageNet) untuk mengekstrak pola visual daun secara cepat dan akurat.</li>
+    <li><em>Classification Head</em> kustom ditambahkan di akhir arsitektur dengan mengimplementasikan lapisan <code>Dropout(0.5)</code> untuk mencegah <em>overfitting</em>, dan diakhiri dengan lapisan <code>Dense(4, Softmax)</code> untuk menghasilkan probabilitas prediksi terhadap 4 kelas penyakit.</li>
+  </ul>
+
+  <h3>Model Evaluasi apa yang dipilih:</h3>
+  <p>Evaluasi model berfokus pada dua metrik utama selama proses pelatihan:</p>
+  <ul>
+    <li><strong>Validation Accuracy:</strong> Mengukur persentase prediksi benar yang diujikan pada data validasi yang tidak digunakan dalam proses belajar.</li>
+    <li><strong>Early Stopping:</strong> Model dievaluasi menggunakan mekanisme penghentian otomatis apabila <em>Validation Loss</em> (Categorical Crossentropy) tidak membaik selama 3 <em>epoch</em> berturut-turut, guna memastikan model tidak menghafal data (<em>overfitting</em>). Model terbaik disimpan secara otomatis (<em>ModelCheckpoint</em>).</li>
+  </ul>
+</div>
+
+<!-- ========================================== -->
+<h2>📌 Slide 13: Hasil Program</h2>
+<p>Tampilkan hasil program/model yang anda kerjakan (tambahkan <em>screenshot</em> web Flask di slide), dan gunakan narasi ini:</p>
+
+<div class="content-box">
+  <p>Model AI berhasil diselesaikan dan di-<em>deploy</em> menjadi <strong>Aplikasi Web Lokal menggunakan framework Flask</strong>.</p>
+  <ul>
+    <li><strong>Performa Model:</strong> Pelatihan model berhasil mencapai <span class="highlight">Validation Accuracy sebesar 95.36%</span> dan berhenti secara optimal pada Epoch ke-21 berkat teknik <em>Early Stopping</em>.</li>
+    <li><strong>Fungsionalitas Web:</strong> Antarmuka aplikasi memungkinkan petani untuk mengunggah citra daun padi secara langsung. Sistem secara *real-time* memproses gambar, memprediksi jenis penyakit, dan menampilkan <em>confidence score</em>.</li>
+    <li><strong>Solusi Berkelanjutan:</strong> Bersamaan dengan hasil diagnosis, sistem langsung memberikan <strong>rekomendasi penanganan berbasis organik/nabati</strong> yang diformulasikan khusus untuk setiap penyakit (misal: penggunaan ekstrak mimba atau Trichoderma sp.).</li>
+  </ul>
+</div>
+
+<!-- ========================================== -->
+<h2>📌 Slide 14: Kesimpulan</h2>
+
+<div class="content-box">
+  <ol>
+    <li><strong>Masalah Teratasi:</strong> Kesulitan petani dalam mengidentifikasi penyakit padi secara visual berhasil dijawab melalui otomatisasi berbasis Kecerdasan Buatan.</li>
+    <li><strong>Solusi AI Berkinerja Tinggi:</strong> Penggunaan metode Klasifikasi Deep Learning (MobileNetV2 Transfer Learning) terbukti sangat efektif, ditunjukkan dengan tingkat akurasi model yang mencapai <strong>95.36%</strong> dari pengujian pada 2.588 dataset citra.</li>
+    <li><strong>Siap Digunakan:</strong> Model tidak hanya berupa kode mentah, namun telah berhasil diintegrasikan secara penuh ke dalam Aplikasi Web (Flask) yang fungsional, <em>user-friendly</em>, dan ringan.</li>
+    <li><strong>Dampak terhadap SDG 2 (Zero Hunger):</strong> Inovasi ini berkontribusi aktif pada upaya ketahanan pangan global dengan mencegah gagal panen secara dini, serta mempromosikan praktik pertanian yang ramah lingkungan melalui penyediaan panduan penanganan penyakit secara organik.</li>
+  </ol>
+</div>
+
+<!-- ========================================== -->
+<h2>📌 Slide 15: Progam</h2>
+
+<div class="content-box">
+  <ul>
+    <li><strong>Repository GitHub:</strong> <em>[Silakan isi dengan tautan/URL GitHub proyek tim Anda]</em></li>
+    <li><strong>Tech Stack Utama:</strong> Python, TensorFlow/Keras, Flask, Tailwind CSS.</li>
+    <li><strong>Model AI:</strong> `agri_vision_model.h5`</li>
+  </ul>
+</div>
+
+<div class="footer">
+  Agri Vision — Capstone Project Report Content · 2026
+</div>
+
+</body>
+</html>

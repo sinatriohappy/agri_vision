@@ -1,0 +1,8 @@
+dataset/
+.venv/
+.pip_cache/
+__pycache__/
+*.pyc
+*.pyo
+.tmp/
+.vscode/

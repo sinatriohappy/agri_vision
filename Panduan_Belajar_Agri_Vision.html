@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Panduan Belajar — Agri Vision: Deteksi Penyakit Padi Berbasis AI</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --green: #166534;
+    --green-light: #dcfce7;
+    --green-mid: #22c55e;
+    --blue: #1e40af;
+    --blue-light: #dbeafe;
+    --orange: #c2410c;
+    --orange-light: #ffedd5;
+    --red: #991b1b;
+    --red-light: #fee2e2;
+    --purple: #6b21a8;
+    --purple-light: #f3e8ff;
+    --gray: #374151;
+    --gray-light: #f3f4f6;
+    --gray-border: #d1d5db;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 11pt;
+    line-height: 1.65;
+    color: #1f2937;
+    max-width: 210mm;
+    margin: 0 auto;
+    padding: 15mm;
+    background: white;
+  }
+
+  @media print {
+    body { padding: 0; margin: 0; font-size: 10pt; }
+    .no-print { display: none !important; }
+    .page-break { page-break-before: always; }
+    h2 { page-break-after: avoid; }
+    .box, .code-block, table { page-break-inside: avoid; }
+  }
+
+  /* ── Print Banner ── */
+  .print-banner {
+    background: linear-gradient(135deg, #166534, #22c55e);
+    color: white;
+    padding: 16px 24px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    cursor: pointer;
+  }
+  .print-banner:hover { opacity: 0.9; }
+
+  /* ── Cover ── */
+  .cover {
+    text-align: center;
+    padding: 40px 20px 30px;
+    border: 3px solid var(--green);
+    border-radius: 16px;
+    margin-bottom: 30px;
+    background: linear-gradient(180deg, var(--green-light) 0%, white 100%);
+  }
+  .cover h1 { font-size: 26pt; color: var(--green); margin-bottom: 6px; }
+  .cover .subtitle { font-size: 13pt; color: var(--gray); margin-bottom: 20px; }
+  .cover .meta { font-size: 9pt; color: #6b7280; line-height: 1.8; }
+  .cover .meta strong { color: var(--gray); }
+
+  /* ── Headings ── */
+  h2 {
+    font-size: 15pt;
+    color: var(--green);
+    border-bottom: 3px solid var(--green-mid);
+    padding-bottom: 6px;
+    margin: 30px 0 14px;
+  }
+  h3 {
+    font-size: 12pt;
+    color: var(--blue);
+    margin: 20px 0 10px;
+    padding-left: 10px;
+    border-left: 4px solid var(--blue);
+  }
+  h4 {
+    font-size: 10.5pt;
+    color: var(--purple);
+    margin: 14px 0 8px;
+  }
+
+  /* ── Boxes ── */
+  .box {
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 12px 0;
+  }
+  .box-green  { background: var(--green-light);  border-left: 5px solid var(--green); }
+  .box-blue   { background: var(--blue-light);   border-left: 5px solid var(--blue); }
+  .box-orange { background: var(--orange-light); border-left: 5px solid var(--orange); }
+  .box-red    { background: var(--red-light);    border-left: 5px solid var(--red); }
+  .box-purple { background: var(--purple-light); border-left: 5px solid var(--purple); }
+  .box-gray   { background: var(--gray-light);   border-left: 5px solid var(--gray-border); }
+  .box-title  { font-weight: 700; font-size: 10pt; margin-bottom: 6px; display: block; }
+
+  /* ── Code ── */
+  .code-block {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 14px 16px;
+    border-radius: 8px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 9pt;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 10px 0;
+    white-space: pre;
+  }
+  .code-block .comment { color: #94a3b8; }
+  .code-block .keyword { color: #93c5fd; }
+  .code-block .string  { color: #86efac; }
+  .code-block .number  { color: #fbbf24; }
+  .code-block .highlight { background: rgba(250,204,21,0.15); display: inline; }
+  code {
+    background: #f1f5f9;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', monospace;
+    font-size: 9.5pt;
+    color: var(--red);
+  }
+
+  /* ── Tables ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 9.5pt;
+  }
+  th {
+    background: var(--green);
+    color: white;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--gray-border);
+    vertical-align: top;
+  }
+  tr:nth-child(even) { background: #f9fafb; }
+
+  /* ── Diagram ASCII ── */
+  .diagram {
+    background: #fafafa;
+    border: 2px solid var(--gray-border);
+    border-radius: 10px;
+    padding: 16px;
+    font-family: 'Consolas', monospace;
+    font-size: 9pt;
+    line-height: 1.5;
+    white-space: pre;
+    overflow-x: auto;
+    margin: 12px 0;
+  }
+
+  /* ── Flow steps ── */
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin: 12px 0;
+  }
+  .flow-step {
+    background: var(--green-light);
+    border: 2px solid var(--green-mid);
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 9pt;
+    font-weight: 600;
+    text-align: center;
+    min-width: 90px;
+  }
+  .flow-arrow { font-size: 16pt; color: var(--green); font-weight: 800; }
+
+  /* ── Numbered list ── */
+  .step-list { counter-reset: step; list-style: none; padding: 0; }
+  .step-list li {
+    counter-increment: step;
+    padding: 10px 12px 10px 50px;
+    margin: 8px 0;
+    background: var(--gray-light);
+    border-radius: 8px;
+    position: relative;
+  }
+  .step-list li::before {
+    content: counter(step);
+    position: absolute;
+    left: 12px;
+    top: 8px;
+    width: 28px;
+    height: 28px;
+    background: var(--green);
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 28px;
+    font-weight: 700;
+    font-size: 10pt;
+  }
+
+  /* ── TOC ── */
+  .toc {
+    background: var(--gray-light);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 16px 0 24px;
+  }
+  .toc-title { font-weight: 700; font-size: 11pt; margin-bottom: 8px; color: var(--green); }
+  .toc ol { padding-left: 20px; }
+  .toc li { margin: 4px 0; font-size: 10pt; }
+
+  /* ── Footer ── */
+  .footer {
+    margin-top: 30px;
+    padding-top: 12px;
+    border-top: 2px solid var(--gray-border);
+    text-align: center;
+    font-size: 8pt;
+    color: #9ca3af;
+  }
+
+  /* ── Separator ── */
+  hr {
+    border: none;
+    border-top: 1px dashed var(--gray-border);
+    margin: 20px 0;
+  }
+
+  .emoji { font-size: 14pt; }
+  strong { color: #111827; }
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 8pt;
+    font-weight: 600;
+    margin-right: 4px;
+  }
+  .tag-green  { background: var(--green-light); color: var(--green); }
+  .tag-blue   { background: var(--blue-light); color: var(--blue); }
+  .tag-orange { background: var(--orange-light); color: var(--orange); }
+</style>
+</head>
+<body>
+
+<!-- Print Button -->
+<div class="print-banner no-print" onclick="window.print()">
+  🖨️ <strong>Klik di sini untuk Print / Save as PDF</strong> (atau tekan Ctrl+P)
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- COVER -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="cover">
+  <div style="font-size:40pt; margin-bottom:10px;">🌾🧠</div>
+  <h1>Agri Vision</h1>
+  <div class="subtitle">Panduan Belajar Lengkap — Deteksi Penyakit Padi Berbasis AI</div>
+  <hr style="border-top: 2px solid #bbf7d0; margin: 16px 40px;">
+  <div class="meta">
+    <strong>Capstone Project</strong><br>
+    Stefanus Westin G.M. (71241073) · Giovanni Albert Harjanto (71241075) · Sinatrio Happy Triadji (71241093)<br><br>
+    <strong>Tech Stack:</strong> Python · TensorFlow/Keras · MobileNetV2 · Flask · Tailwind CSS<br>
+    <strong>Metode:</strong> Transfer Learning · Klasifikasi Deep Learning · 4 Kelas<br>
+    <strong>SDG:</strong> Goal 2 — Zero Hunger (Tanpa Kelaparan)
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <div class="toc-title">📑 Daftar Isi</div>
+  <ol>
+    <li>Gambaran Besar Sistem</li>
+    <li>Gambar = Matriks Angka (Pixel)</li>
+    <li>Preprocessing & Normalisasi</li>
+    <li>Convolution: Cara AI "Melihat"</li>
+    <li>MobileNetV2 & Transfer Learning</li>
+    <li>Classification Head (Otak Kustom)</li>
+    <li>Proses Training: Forward + Backpropagation</li>
+    <li>Proses Prediksi (Inference)</li>
+    <li>Kenapa AI Bisa Bedakan Penyakit?</li>
+    <li>Arsitektur File Project</li>
+    <li>Rekomendasi Penanganan Organik</li>
+    <li>Cheat Sheet: Kode ↔ Konsep</li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- BAB 1 -->
+<!-- ═══════════════════════════════════════════════════ -->
+<h2>1. Gambaran Besar Sistem</h2>
+
+<p>Agri Vision bekerja dalam <strong>2 fase utama</strong>:</p>
+
+<div class="box box-green">
+  <span class="box-title">⚙️ FASE 1 — Training (Melatih AI, dijalankan sekali)</span>
+  Dataset 2.588 foto daun → AI belajar pola penyakit → menghasilkan file model <code>agri_vision_model.h5</code>
+</div>
+
+<div class="box box-blue">
+  <span class="box-title">🌐 FASE 2 — Prediksi (Aplikasi Web, dijalankan berulang)</span>
+  Petani upload foto daun → model AI menganalisis → menampilkan jenis penyakit + rekomendasi organik
+</div>
+
+<div class="flow">
+  <div class="flow-step">📂 Dataset<br><small>2.588 foto</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-step">🔄 Augmentasi<br><small>Perbanyak variasi</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-step">🧠 MobileNetV2<br><small>Ekstrak fitur</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-step">🎓 Training<br><small>Belajar pola</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-step">💾 Model .h5<br><small>Otak AI tersimpan</small></div>
+</div>
+
+<div class="box box-gray">
+  <span class="box-title">💡 Analogi</span>
+  Fase 1 = <strong>belajar untuk ujian</strong> (lama, cuma sekali). Fase 2 = <strong>mengerjakan ujian</strong> (cepat, berulang-ulang).
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- BAB 2 -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<h2>2. Gambar = Matriks Angka (Pixel)</h2>
+
+<p>Komputer <strong>tidak melihat gambar</strong> seperti manusia. Bagi komputer, gambar adalah <strong>tabel angka raksasa</strong>.</p>
+
+<h3>2.1 Struktur Pixel RGB</h3>
+
+<p>Setiap foto daun padi adalah <strong>3 tabel angka bertumpuk</strong> — satu untuk warna Merah (R), Hijau (G), dan Biru (B):</p>
+
+<div class="diagram">Channel RED (Merah)         Channel GREEN (Hijau)        Channel BLUE (Biru)
+┌───┬───┬───┬─── ···  ───┐ ┌───┬───┬───┬─── ···  ───┐  ┌───┬───┬───┬─── ···  ───┐
+│ 45│ 47│ 52│            │ │120│125│130│            │  │ 30│ 28│ 35│            │
+├───┼───┼───┤   224 col  │ ├───┼───┼───┤   224 col  │  ├───┼───┼───┤   224 col  │
+│ 50│ 55│ 60│            │ │118│122│128│            │  │ 25│ 30│ 32│            │
+│   :   :   :   224 row  │ │   :   :   :   224 row  │  │   :   :   :   224 row  │
+└───┴───┴───┴─── ···  ───┘ └───┴───┴───┴─── ···  ───┘  └───┴───┴───┴─── ···  ───┘
+
+Tiap angka: 0 (hitam) sampai 255 (warna paling terang)
+Total angka per gambar: 224 × 224 × 3 = <strong>150.528 angka</strong></div>
+
+<div class="box box-orange">
+  <span class="box-title">🔑 Poin Penting</span>
+  Satu pixel daun hijau sehat mungkin bernilai <code>R=45, G=120, B=30</code> — hijau dominan.
+  Satu pixel bercak cokelat mungkin bernilai <code>R=139, G=90, B=43</code> — merah-cokelat dominan.<br>
+  <strong>AI belajar mengenali pola angka-angka ini!</strong>
+</div>
+
+<h3>2.2 Kode yang Melakukan Ini</h3>
+
+<div class="code-block"><span class="comment"># File: app.py, baris 111-115</span>
+img = Image.open(<span class="string">"foto_daun.jpg"</span>).convert(<span class="string">"RGB"</span>)   <span class="comment"># buka sebagai 3 channel</span>
+img = img.resize((<span class="number">224</span>, <span class="number">224</span>))                        <span class="comment"># resize jadi 224×224</span>
+img_array = np.array(img, dtype=np.float32)         <span class="comment"># konversi jadi array angka</span>
+
+<span class="comment"># Hasilnya: array dengan bentuk (224, 224, 3)</span>
+<span class="comment"># Contoh: img_array[0][0] = [45.0, 120.0, 30.0]  ← pixel kiri atas</span>
+
+img_array = np.expand_dims(img_array, axis=<span class="number">0</span>)       <span class="comment"># bentuk jadi (1, 224, 224, 3)</span>
+                                                     <span class="comment"># 1 = satu gambar (format batch)</span></div>
+
+<div class="box box-purple">
+  <span class="box-title">❓ "Jadi foto dipecah jadi pixel, dilihat satu-satu?"</span>
+  <strong>BUKAN satu-satu.</strong> AI melihatnya dalam <strong>kelompok kecil</strong> menggunakan teknik <strong>Convolution</strong> — filter kecil 3×3 yang bergeser di atas gambar dan mendeteksi pola. Dijelaskan di Bab 4.
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- BAB 3 -->
+<!-- ═══════════════════════════════════════════════════ -->
+<h2>3. Preprocessing & Normalisasi</h2>
+
+<p>Sebelum masuk ke model AI, angka pixel <strong>dinormalisasi</strong> dari range <code>[0, 255]</code> menjadi <code>[-1.0, +1.0]</code>:</p>
+
+<div class="code-block"><span class="comment"># File: train.py, baris 93</span>
+x = tf.keras.applications.mobilenet_v2.preprocess_input(x)
+
+<span class="comment"># Rumus: output = (pixel / 127.5) - 1.0</span>
+<span class="comment">#   pixel = 0   → -1.0  (hitam)</span>
+<span class="comment">#   pixel = 127 →  0.0  (abu-abu)</span>
+<span class="comment">#   pixel = 255 → +1.0  (terang total)</span></div>
+
+<div class="box box-gray">
+  <span class="box-title">💡 Kenapa perlu normalisasi?</span>
+  <ul>
+    <li>Angka <code>0-255</code> terlalu besar → gradient saat training tidak stabil</li>
+    <li>Range <code>-1 sampai +1</code> membuat training <strong>lebih cepat</strong> dan stabil</li>
+    <li>MobileNetV2 dilatih dengan range ini, jadi input harus sama</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- BAB 4 -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<h2>4. Convolution: Cara AI "Melihat" Gambar</h2>
+
+<p>AI TIDAK melihat pixel satu per satu. Ia menggunakan <strong>filter/kernel</strong> — jendela kecil (biasanya 3×3) yang <strong>bergeser</strong> di atas gambar dan mendeteksi pola tertentu.</p>
+
+<h3>4.1 Cara Kerja Satu Filter</h3>
+
+<p>Bayangkan filter pendeteksi <strong>tepi vertikal</strong>:</p>
+
+<div class="diagram">Filter 3×3:                Bagian gambar 3×3:           Hasil:
+┌────┬────┬────┐           ┌────┬────┬────┐
+│ -1 │  0 │ +1 │     ✕     │ 45 │ 45 │120 │
+├────┼────┼────┤           ├────┼────┼────┤
+│ -1 │  0 │ +1 │           │ 50 │ 50 │125 │       = 220
+├────┼────┼────┤           ├────┼────┼────┤     (angka BESAR
+│ -1 │  0 │ +1 │           │ 48 │ 48 │118 │      = ada tepi!)
+└────┴────┴────┘           └────┴────┴────┘
+
+Perhitungan (kalikan posisi sama, lalu jumlahkan):
+= (-1×45) + (0×45) + (+1×120)
++ (-1×50) + (0×50) + (+1×125)
++ (-1×48) + (0×48) + (+1×118)
+= -45 + 0 + 120 - 50 + 0 + 125 - 48 + 0 + 118
+= <strong>220</strong>  ← BESAR = ada tepi vertikal!</div>
+
+<div class="box box-gray">
+  <span class="box-title">💡 Kalau area polos (semua pixel mirip)?</span>
+  <code>(-1×50) + (0×51) + (+1×52) + ... ≈ 6</code> → angka <strong>kecil</strong> = tidak ada tepi di sini.
+</div>
+
+<h3>4.2 Filter Bergeser (Sliding Window)</h3>
+
+<p>Filter bergeser <strong>1 pixel ke kanan</strong>, lalu turun 1 baris, sampai seluruh gambar ter-scan. Setiap posisi menghasilkan 1 angka output → disebut <strong>Feature Map</strong>.</p>
+
+<h3>4.3 Banyak Filter = Banyak Jenis Deteksi</h3>
+
+<p>MobileNetV2 punya <strong>ratusan filter</strong> di setiap layer, masing-masing mendeteksi pola berbeda:</p>
+
+<table>
+  <tr><th>Level</th><th>Yang Dideteksi</th><th>Contoh</th></tr>
+  <tr>
+    <td><span class="tag tag-green">Layer Awal</span></td>
+    <td>Fitur sederhana (low-level)</td>
+    <td>Tepi horizontal ──, tepi vertikal │, warna dasar hijau/cokelat</td>
+  </tr>
+  <tr>
+    <td><span class="tag tag-blue">Layer Tengah</span></td>
+    <td>Fitur menengah (mid-level)</td>
+    <td>Bentuk bulat (bercak?), tekstur bergaris, area berubah warna</td>
+  </tr>
+  <tr>
+    <td><span class="tag tag-orange">Layer Akhir</span></td>
+    <td>Fitur kompleks (high-level)</td>
+    <td>Pola bercak cokelat khas Brown Spot, lesi diamond khas Leaf Blast</td>
+  </tr>
+</table>
+
+<div class="box box-green">
+  <span class="box-title">🔑 Kunci Pemahaman</span>
+  Dari layer ke layer, AI menggabungkan fitur sederhana jadi fitur kompleks:<br>
+  <strong>Tepi + Warna → Bentuk → Bercak → Pola Penyakit</strong><br>
+  Seperti manusia: kita lihat warna → bentuk → "oh ini bercak cokelat" → "ini Brown Spot".
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- BAB 5 -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<h2>5. MobileNetV2 & Transfer Learning</h2>
+
+<h3>5.1 Apa itu Transfer Learning?</h3>
+
+<p>Kita <strong>TIDAK</strong> melatih AI dari nol. Kita pakai "otak" yang <strong>sudah pintar</strong> (MobileNetV2) yang pernah dilatih dengan <strong>1,4 juta gambar</strong> dari ImageNet.</p>
+
+<div class="box box-blue">
+  <span class="box-title">💡 Analogi</span>
+  Bayangkan kamu mau belajar mengenali penyakit padi. Kamu punya 2 pilihan:<br>
+  ❌ <strong>Tanpa Transfer Learning:</strong> Belajar dari bayi — belajar lihat, kenal warna, kenal bentuk, baru kenal penyakit. Butuh JUTAAN contoh.<br>
+  ✅ <strong>Dengan Transfer Learning:</strong> Kamu sudah dewasa dan bisa melihat. Tinggal belajar "bercak ini = Brown Spot". Cukup RIBUAN contoh.
+</div>
+
+<h3>5.2 Kenapa MobileNetV2?</h3>
+
+<table>
+  <tr><th>Kelebihan</th><th>Penjelasan</th></tr>
+  <tr><td><strong>Ringan</strong></td><td>Hanya ~3.4 juta parameter (vs VGG16: 138 juta). Cocok untuk web/mobile.</td></tr>
+  <tr><td><strong>Cepat</strong></td><td>Menggunakan Depthwise Separable Convolution — <strong>7× lebih efisien</strong> dari conv biasa.</td></tr>
+  <tr><td><strong>Akurat</strong></td><td>Tetap akurasi tinggi karena sudah dilatih dengan 1.4 juta gambar ImageNet.</td></tr>
+</table>
+
+<h3>5.3 Depthwise Separable Convolution (Trik Efisiensi)</h3>
+
+<div class="diagram">Convolution BIASA:
+  Filter 3×3 diterapkan ke SEMUA channel sekaligus
+  3×3×3 channel × 32 filter = <strong>864 perkalian</strong> per posisi
+
+Depthwise Separable (MobileNetV2):
+  Langkah 1: Filter 3×3 per channel TERPISAH → 3×3 × 3 = 27 perkalian
+  Langkah 2: Filter 1×1 gabungkan channel   → 1×1×3 × 32 = 96 perkalian
+  Total: 27 + 96 = <strong>123 perkalian</strong> per posisi
+
+  Penghematan: 864 / 123 ≈ <strong>7× lebih efisien!</strong> ✅</div>
+
+<h3>5.4 Perjalanan Data di Dalam MobileNetV2</h3>
+
+<div class="diagram">INPUT: (1, 224, 224, 3)        ← 1 gambar, 224×224, 3 warna
+  │
+  ▼ Conv2D + 17 Bottleneck Blocks
+  │
+  │  Layer awal:  (224×224×3)  → mendeteksi tepi, warna     → (112×112×32)
+  │  Layer 1-5:   (112×112)   → mendeteksi tekstur          → (28×28×32)
+  │  Layer 6-12:  (28×28)     → mendeteksi pola bercak      → (14×14×96)
+  │  Layer 13-17: (14×14)     → mendeteksi pola penyakit    → (7×7×1280)
+  │
+  ▼
+OUTPUT: (1, 7, 7, 1280)       ← Feature Map akhir ⭐
+
+  1280 channel = 1280 "detektor fitur" berbeda
+  7×7 = posisi spasial (di mana fitur ditemukan)</div>
+
+<div class="box box-orange">
+  <span class="box-title">⚠️ Perhatikan Polanya</span>
+  Ukuran spasial <strong>mengecil</strong>: 224 → 112 → 56 → 28 → 14 → 7<br>
+  Jumlah channel <strong>membesar</strong>: 3 → 32 → 24 → 96 → 1280<br><br>
+  Artinya: informasi <strong>"di mana"</strong> dikurangi, tapi informasi <strong>"apa yang ada"</strong> diperbanyak.
+</div>
+
+<h3>5.5 Kode Transfer Learning</h3>
+
+<div class="code-block"><span class="comment"># File: train.py, baris 83-88</span>
+base_model = MobileNetV2(
+    weights=<span class="string">"imagenet"</span>,      <span class="comment"># ← pakai bobot yang sudah dilatih 1.4 juta gambar</span>
+    include_top=<span class="keyword">False</span>,        <span class="comment"># ← buang layer klasifikasi asli (1000 kelas ImageNet)</span>
+    input_shape=(<span class="number">224</span>, <span class="number">224</span>, <span class="number">3</span>)
+)
+<span class="highlight">base_model.trainable = False</span>  <span class="comment"># ← FREEZE! Bobot dikunci, TIDAK ikut dilatih</span>
+                               <span class="comment"># Kita hanya latih Classification Head di atasnya</span></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- BAB 6 -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<h2>6. Classification Head (Otak Kustom Kita)</h2>
+
+<p>Setelah MobileNetV2 mengekstrak fitur <code>(1, 7, 7, 1280)</code>, kita tambah <strong>4 layer buatan sendiri</strong> untuk mengubahnya jadi 4 probabilitas penyakit.</p>
+
+<h3>6.1 GlobalAveragePooling2D — Meringkas Fitur</h3>
+
+<div class="code-block"><span class="comment"># train.py, baris 95</span>
+x = layers.GlobalAveragePooling2D()(x)   <span class="comment"># (1, 7, 7, 1280) → (1, 1280)</span></div>
+
+<div class="diagram">Feature Map channel ke-42 (7×7):          Setelah Pooling:
+
+┌─────┬─────┬─────┬─────┬─────┬─────┬─────┐
+│ 0.0 │ 0.0 │ 0.0 │ 0.0 │ 0.0 │ 0.0 │ 0.0 │
+│ 0.0 │ 0.2 │ 0.8 │ 0.9 │ 0.7 │ 0.1 │ 0.0 │     Rata-rata
+│ 0.0 │ 0.5 │ 2.1 │ 2.5 │ 1.8 │ 0.3 │ 0.0 │     49 angka    →  <strong>0.41</strong>
+│ 0.0 │ 0.4 │ 1.9 │ 2.3 │ 1.6 │ 0.2 │ 0.0 │
+│ 0.0 │ 0.1 │ 0.6 │ 0.7 │ 0.5 │ 0.1 │ 0.0 │     1280 channel
+│ 0.0 │ 0.0 │ 0.1 │ 0.2 │ 0.1 │ 0.0 │ 0.0 │     → 1280 angka
+│ 0.0 │ 0.0 │ 0.0 │ 0.0 │ 0.0 │ 0.0 │ 0.0 │
+└─────┴─────┴─────┴─────┴─────┴─────┴─────┘
+
+Artinya: "Seberapa kuat fitur ini terdeteksi di SELURUH gambar?"
+Tidak peduli DI MANA letaknya, hanya peduli ADA atau TIDAK.</div>
+
+<h3>6.2 Dense(128, ReLU) — Menganalisis Kombinasi</h3>
+
+<div class="code-block"><span class="comment"># train.py, baris 96</span>
+x = layers.Dense(<span class="number">128</span>, activation=<span class="string">"relu"</span>)(x)   <span class="comment"># (1, 1280) → (1, 128)</span></div>
+
+<p>Setiap neuron terhubung ke <strong>semua 1280 input</strong>. Tiap neuron punya 1280 bobot (yang dipelajari saat training).</p>
+
+<div class="box box-gray">
+  <span class="box-title">💡 Apa itu ReLU?</span>
+  <code>ReLU(x) = max(0, x)</code><br>
+  Jika x = 1.25 → output = 1.25 (positif: loloskan) ✅<br>
+  Jika x = -0.3 → output = 0.00 (negatif: blokir) ❌<br>
+  <strong>Tujuan:</strong> Membuat model bisa mempelajari pola non-linear (dunia nyata bukan garis lurus).
+</div>
+
+<h3>6.3 Dropout(0.5) — Cegah Overfitting</h3>
+
+<div class="code-block"><span class="comment"># train.py, baris 97</span>
+x = layers.Dropout(<span class="number">0.5</span>)(x)   <span class="comment"># matikan 50% neuron secara ACAK saat training</span></div>
+
+<div class="diagram">Saat TRAINING (aktif):           Saat PREDIKSI (nonaktif):
+┌──────┐                         ┌──────┐
+│ 0.73 │ ✅ lolos                │ 0.73 │ ✅ semua aktif
+│ 0.00 │ ❌ dimatikan            │ 0.45 │ ✅
+│ 1.25 │ ✅ lolos                │ 1.25 │ ✅
+│ 0.00 │ ❌ dimatikan            │ 0.42 │ ✅
+│ 0.56 │ ✅ lolos                │ 0.56 │ ✅
+└──────┘                         └──────┘
+Neuron yang mati BERUBAH setiap batch → model tidak bergantung pada neuron tertentu</div>
+
+<h3>6.4 Dense(4, Softmax) — Keputusan Akhir</h3>
+
+<div class="code-block"><span class="comment"># train.py, baris 98</span>
+outputs = layers.Dense(<span class="number">4</span>, activation=<span class="string">"softmax"</span>)(x)   <span class="comment"># (1, 128) → (1, 4)</span></div>
+
+<div class="diagram">128 input → 4 neuron → Softmax
+
+Skor mentah (logits):               Setelah Softmax:
+  Brown_Spot: z₁ = 1.2                Brown_Spot:  0.05  (5%)
+  Healthy:    z₂ = 4.5     ──────→    Healthy:     0.85  (85%)  ⭐ Tertinggi
+  Leaf_Blast: z₃ = 0.3                Leaf_Blast:  0.03  (3%)
+  Tungro:     z₄ = 1.8                Tungro:      0.07  (7%)
+                                       ─────────────────────────
+                                       Total:       1.00  (100%) ✅</div>
+
+<div class="box box-blue">
+  <span class="box-title">📐 Rumus Softmax</span>
+  <code>softmax(zᵢ) = e^zᵢ / Σⱼ(e^zⱼ)</code><br><br>
+  Contoh untuk Healthy (z₂ = 4.5):<br>
+  <code>e^4.5 / (e^1.2 + e^4.5 + e^0.3 + e^1.8) = 90.02 / 100.74 = 0.893 ≈ 85%</code><br><br>
+  <strong>Kenapa Softmax?</strong> Karena output harus: (1) selalu positif, (2) total = 100%, (3) kelas terbaik punya skor tertinggi.
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- BAB 7 -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<h2>7. Proses Training: Forward + Backpropagation</h2>
+
+<p>Ini yang terjadi saat <code>model.fit()</code> dijalankan (<code>train.py</code> baris 141-146):</p>
+
+<h3>7.1 Forward Pass (Maju) — Prediksi</h3>
+
+<ol class="step-list">
+  <li><strong>32 gambar</strong> masuk sebagai satu batch <code>(32, 224, 224, 3)</code></li>
+  <li><strong>Data augmentasi</strong> diaplikasikan (flip, rotasi, zoom — acak per gambar)</li>
+  <li><strong>Normalisasi</strong> pixel ke range [-1, +1]</li>
+  <li><strong>MobileNetV2</strong> mengekstrak fitur → <code>(32, 7, 7, 1280)</code></li>
+  <li><strong>Classification Head</strong> memproses → <code>(32, 4)</code> prediksi</li>
+</ol>
+
+<div class="diagram">Contoh untuk gambar ke-1 dalam batch:
+  Prediksi model: [0.25, 0.25, 0.25, 0.25]  ← model belum yakin (awal training)
+  Label asli:     [0,    1,    0,    0   ]    ← seharusnya Healthy (one-hot encoding)</div>
+
+<h3>7.2 Hitung Loss — Seberapa Salah?</h3>
+
+<div class="code-block"><span class="comment"># train.py, baris 120</span>
+loss = <span class="string">"categorical_crossentropy"</span>
+
+<span class="comment"># Rumus:  Loss = -Σᵢ yᵢ × log(ŷᵢ)</span>
+<span class="comment">#   yᵢ = label asli (one-hot)</span>
+<span class="comment">#   ŷᵢ = prediksi model</span></div>
+
+<table>
+  <tr><th>Skenario</th><th>Label</th><th>Prediksi</th><th>Loss</th><th>Artinya</th></tr>
+  <tr>
+    <td>Model <strong>salah</strong></td>
+    <td>[0, 1, 0, 0]</td>
+    <td>[0.25, 0.25, 0.25, 0.25]</td>
+    <td><strong>1.386</strong></td>
+    <td>❌ Tinggi = salah banyak</td>
+  </tr>
+  <tr>
+    <td>Model <strong>benar</strong></td>
+    <td>[0, 1, 0, 0]</td>
+    <td>[0.05, 0.85, 0.03, 0.07]</td>
+    <td><strong>0.163</strong></td>
+    <td>✅ Rendah = hampir benar</td>
+  </tr>
+</table>
+
+<h3>7.3 Backpropagation (Mundur) — Perbaiki Bobot</h3>
+
+<p>Setelah loss dihitung, AI menghitung <strong>gradient</strong>: "bobot mana yang harus berubah, ke arah mana, dan seberapa besar?"</p>
+
+<div class="diagram">Loss = 1.386 (model salah)
+   │
+   ▼  Hitung gradient: ∂Loss/∂bobot (berapa pengaruh tiap bobot terhadap error?)
+   │
+┌──────────────┐
+│  Dense(4)    │ ← gradient dihitung, bobot di-update
+│  Softmax     │
+└──────────────┘
+   │
+   ▼  Chain rule: gradient mengalir ke layer sebelumnya
+   │
+┌──────────────┐
+│  Dropout     │ ← gradient hanya lewat neuron yang aktif
+│  Dense(128)  │ ← gradient dihitung, bobot di-update
+│  ReLU        │ ← gradient = 0 untuk output yang 0
+└──────────────┘
+   │
+   ▼
+┌──────────────┐
+│  GAP         │ ← gradient didistribusikan ke 7×7
+└──────────────┘
+   │
+   ▼
+┌──────────────┐
+│ MobileNetV2  │ ← <strong>STOP!</strong> trainable=False
+│  (FROZEN)    │   Bobot TIDAK berubah
+└──────────────┘
+
+Yang DILATIH:
+  Dense(128): 1280 × 128 + 128 bias = 163.968 bobot
+  Dense(4):     128 × 4  +   4 bias =     516 bobot
+  Total:                              <strong>164.484 bobot</strong></div>
+
+<h3>7.4 Adam Optimizer — Update Bobot Cerdas</h3>
+
+<div class="code-block"><span class="comment"># train.py, baris 119</span>
+optimizer = tf.keras.optimizers.Adam(learning_rate=<span class="number">1e-3</span>)</div>
+
+<div class="box box-gray">
+  <span class="box-title">💡 Apa bedanya Adam dengan SGD biasa?</span>
+  <strong>SGD biasa:</strong> <code>bobot_baru = bobot_lama - learning_rate × gradient</code> → learning rate sama untuk semua bobot.<br><br>
+  <strong>Adam (Adaptive):</strong> Menyimpan "sejarah" gradient → bobot yang konsisten di-update besar, yang fluktuatif di-update kecil. Otomatis menyesuaikan kecepatan belajar per bobot. <strong>Tidak perlu tuning manual!</strong>
+</div>
+
+<h3>7.5 Epoch, EarlyStopping & ModelCheckpoint</h3>
+
+<table>
+  <tr><th>Konsep</th><th>Penjelasan</th><th>Nilai di Kode</th></tr>
+  <tr>
+    <td><strong>Epoch</strong></td>
+    <td>1 epoch = AI melihat SEMUA 2.588 gambar sekali penuh</td>
+    <td>Maks 30 epoch</td>
+  </tr>
+  <tr>
+    <td><strong>EarlyStopping</strong></td>
+    <td>Jika <code>val_loss</code> tidak membaik 3 epoch berturut → <strong>berhenti otomatis</strong>. Mencegah overfitting.</td>
+    <td>patience=3</td>
+  </tr>
+  <tr>
+    <td><strong>ModelCheckpoint</strong></td>
+    <td>Setiap kali <code>val_accuracy</code> baru lebih tinggi → <strong>simpan model terbaik</strong> ke file <code>.h5</code></td>
+    <td>save_best_only=True</td>
+  </tr>
+</table>
+
+<div class="box box-green">
+  <span class="box-title">💡 Analogi Training</span>
+  <strong>Epoch</strong> = ulangan membaca seluruh buku. <strong>EarlyStopping</strong> = kalau 3 kali ujian berturut-turut nilainya tidak naik, berhenti belajar (sudah optimal). <strong>ModelCheckpoint</strong> = simpan "versi terpintar" dari diri sendiri.
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- BAB 8 -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<h2>8. Proses Prediksi (Inference) — Dari Upload ke Rekomendasi</h2>
+
+<div class="diagram">📸 Petani upload "daun_sakit.jpg" (1200×900 pixel)
+   │
+   ▼ [app.py L111]  Image.open().convert("RGB")
+   3 matriks angka: R[1200×900] + G[1200×900] + B[1200×900]
+   │
+   ▼ [app.py L112]  img.resize((224, 224))
+   Downsample: 1.080.000 → 50.176 pixel per channel
+   Shape: (224, 224, 3) = 150.528 angka
+   │
+   ▼ [app.py L115]  np.expand_dims → (1, 224, 224, 3)
+   │
+   ▼ [model internal]  preprocess_input → normalisasi ke [-1, +1]
+   │
+   ▼ [MobileNetV2]  17 bottleneck blocks
+   │  (1, 224, 224, 3) → tepi, warna → tekstur → pola bercak → (1, 7, 7, 1280)
+   │
+   ▼ [GAP]  rata-rata per channel → (1, 1280)
+   │
+   ▼ [Dense 128 + ReLU]  kombinasi fitur → (1, 128)
+   │
+   ▼ [Dense 4 + Softmax]  probabilitas → (1, 4)
+   │  Contoh: [0.02, 0.03, <strong>0.88</strong>, 0.07]
+   │
+   ▼ [app.py L176]  np.argmax → index 2
+   ▼ [app.py L178]  class_names[2] → "Leaf_Blast"
+   ▼ [app.py L177]  0.88 × 100 → "88.00%"
+   ▼ [app.py L180]  RECOMMENDATIONS["Leaf_Blast"] → rekomendasi organik
+   │
+   ▼ OUTPUT JSON:
+   ┌─────────────────────────────────────────────────────┐
+   │  Prediksi:     Leaf Blast (Blast Daun)              │
+   │  Kepercayaan:  88.00%                               │
+   │  Rekomendasi:  "Kurangi penggunaan pupuk nitrogen    │
+   │                berlebih. Semprotkan agen hayati      │
+   │                Trichoderma sp. atau ekstrak lengkuas."│
+   └─────────────────────────────────────────────────────┘</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- BAB 9 -->
+<!-- ═══════════════════════════════════════════════════ -->
+<h2>9. Kenapa AI Bisa Bedakan Penyakit?</h2>
+
+<p>Setiap penyakit punya <strong>visual signature</strong> unik yang dikenali oleh filter convolution:</p>
+
+<table>
+  <tr><th>Penyakit</th><th>Ciri Visual yang Dideteksi AI</th><th>Filter yang Aktif Tinggi</th></tr>
+  <tr>
+    <td>🟢 <strong>Healthy</strong></td>
+    <td>Warna hijau merata, tekstur halus, tidak ada bercak</td>
+    <td>Filter warna hijau ↑, filter bercak ↓</td>
+  </tr>
+  <tr>
+    <td>🟤 <strong>Brown Spot</strong></td>
+    <td>Bercak oval cokelat gelap, tepi bercak lebih gelap</td>
+    <td>Filter bentuk oval ↑, filter cokelat ↑</td>
+  </tr>
+  <tr>
+    <td>💥 <strong>Leaf Blast</strong></td>
+    <td>Lesi diamond memanjang, pusat abu-abu tepi cokelat</td>
+    <td>Filter diamond ↑, filter gradien warna ↑</td>
+  </tr>
+  <tr>
+    <td>🦠 <strong>Tungro</strong></td>
+    <td>Perubahan warna kuning-oranye dari ujung daun</td>
+    <td>Filter kuning ↑, filter posisi tepi ↑</td>
+  </tr>
+</table>
+
+<div class="box box-purple">
+  <span class="box-title">❗ Penting untuk Presentasi</span>
+  AI <strong>tidak di-program</strong> untuk mencari "bercak oval cokelat". AI <strong>mempelajari sendiri</strong> pola-pola ini dari 2.588 gambar training lewat proses backpropagation. Filter-filter convolution otomatis terbentuk menjadi detektor yang optimal.
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- BAB 10 -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<h2>10. Arsitektur File Project</h2>
+
+<div class="diagram">d:\ai\
+├── 📂 dataset/                ← 2.588 gambar (input training)
+│   ├── Brown_Spot/   361 gambar
+│   ├── Healthy/      927 gambar
+│   ├── Leaf_Blast/   881 gambar
+│   └── Tungro/       419 gambar
+│
+├── 📂 templates/
+│   └── index.html             ← Halaman web frontend (Tailwind CSS)
+│
+├── train.py                   ← Script melatih model AI
+├── app.py                     ← Flask server (backend API)
+├── requirements.txt           ← Daftar library Python
+│
+├── agri_vision_model.h5       ← Model AI tersimpan (output training) ⭐
+└── class_names.txt            ← Urutan nama kelas</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- BAB 11 -->
+<!-- ═══════════════════════════════════════════════════ -->
+<h2>11. Rekomendasi Penanganan Organik</h2>
+
+<table>
+  <tr><th>Kelas</th><th>Rekomendasi (Bahasa Indonesia)</th></tr>
+  <tr>
+    <td>🟢 Healthy</td>
+    <td>Tanaman sehat! Pertahankan pemupukan organik teratur dan rotasi tanaman.</td>
+  </tr>
+  <tr>
+    <td>🟤 Brown Spot</td>
+    <td>Gunakan fungisida nabati (ekstrak daun mimba atau cengkeh). Pastikan drainase air sawah baik dan gunakan pupuk kompos.</td>
+  </tr>
+  <tr>
+    <td>💥 Leaf Blast</td>
+    <td>Kurangi penggunaan pupuk nitrogen berlebih. Semprotkan agen hayati Trichoderma sp. atau ekstrak lengkuas.</td>
+  </tr>
+  <tr>
+    <td>🦠 Tungro</td>
+    <td>Cabut dan musnahkan tanaman yang terinfeksi. Kendalikan populasi wereng hijau (vektor virus) menggunakan pestisida nabati ekstrak sirsak atau bawang putih.</td>
+  </tr>
+</table>
+
+<div class="box box-green">
+  <span class="box-title">🌍 Hubungan dengan SDG 2 — Zero Hunger</span>
+  Semua rekomendasi menggunakan <strong>bahan organik/nabati</strong> (mimba, cengkeh, lengkuas, sirsak, bawang putih, Trichoderma sp.) → mendukung pertanian berkelanjutan dan ketahanan pangan.
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- BAB 12 -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="page-break"></div>
+<h2>12. Cheat Sheet: Kode ↔ Konsep</h2>
+
+<table>
+  <tr><th>File & Baris</th><th>Konsep</th><th>Yang Sebenarnya Terjadi</th></tr>
+  <tr><td>train.py L35-43</td><td>Load Dataset</td><td>Baca gambar, resize 224×224, bagi 80/20, batch 32</td></tr>
+  <tr><td>train.py L72-80</td><td>Augmentasi</td><td>Flip, rotasi, zoom, kontras acak per gambar</td></tr>
+  <tr><td>train.py L83-88</td><td>Transfer Learning</td><td>Ambil MobileNetV2 terlatih, kunci bobotnya (freeze)</td></tr>
+  <tr><td>train.py L93</td><td>Preprocessing</td><td>Normalisasi pixel [0-255] → [-1, +1]</td></tr>
+  <tr><td>train.py L94</td><td>Feature Extraction</td><td>224×224×3 → 7×7×1280 via convolution berlapis</td></tr>
+  <tr><td>train.py L95</td><td>Pooling</td><td>7×7×1280 → rata-rata per channel → 1280 angka</td></tr>
+  <tr><td>train.py L96</td><td>Hidden Layer</td><td>1280 → 128 kombinasi fitur, ReLU blokir negatif</td></tr>
+  <tr><td>train.py L97</td><td>Regularisasi</td><td>Matikan 50% neuron acak → cegah overfitting</td></tr>
+  <tr><td>train.py L98</td><td>Klasifikasi</td><td>128 → 4 probabilitas via softmax (total 100%)</td></tr>
+  <tr><td>train.py L119</td><td>Optimizer</td><td>Adam: update bobot adaptif berdasarkan gradient</td></tr>
+  <tr><td>train.py L120</td><td>Loss Function</td><td>Crossentropy: ukur seberapa salah prediksi</td></tr>
+  <tr><td>train.py L126-131</td><td>EarlyStopping</td><td>Berhenti jika val_loss tidak turun 3× berturut</td></tr>
+  <tr><td>train.py L132-137</td><td>ModelCheckpoint</td><td>Simpan model terbaik berdasarkan val_accuracy</td></tr>
+  <tr><td>train.py L141</td><td>Training Loop</td><td>Forward → loss → backprop → update → ulangi</td></tr>
+  <tr><td>app.py L111-115</td><td>Preprocessing</td><td>Buka gambar → RGB → resize → array → batch</td></tr>
+  <tr><td>app.py L173</td><td>Inference</td><td>Forward pass saja (tanpa backprop) → prediksi</td></tr>
+  <tr><td>app.py L176</td><td>argmax</td><td>Ambil index kelas dengan probabilitas tertinggi</td></tr>
+  <tr><td>app.py L180</td><td>Rekomendasi</td><td>Cocokkan kelas → dictionary rekomendasi organik</td></tr>
+</table>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- RINGKASAN PRESENTASI -->
+<!-- ═══════════════════════════════════════════════════ -->
+<h2>🎯 Ringkasan untuk Presentasi</h2>
+
+<h3>Jawaban Jika Ditanya Dosen</h3>
+
+<table>
+  <tr><th>Pertanyaan</th><th>Jawaban</th></tr>
+  <tr><td>"Foto dipecah jadi pixel lalu dilihat satu-satu?"</td><td><strong>Bukan.</strong> AI melihat dalam kelompok 3×3 pixel menggunakan filter convolution yang bergeser (sliding window). Dari layer ke layer, fitur sederhana digabung jadi fitur kompleks.</td></tr>
+  <tr><td>"Kenapa MobileNetV2?"</td><td>Ringan (3.4M parameter), cepat (depthwise separable conv 7× lebih efisien), akurasi tetap tinggi. Cocok untuk web/mobile.</td></tr>
+  <tr><td>"Kenapa Transfer Learning?"</td><td>Dataset kita ~2.500 gambar, kalau training dari nol butuh jutaan. MobileNetV2 sudah dilatih 1.4 juta gambar → kita pakai "matanya", tinggal latih "otaknya".</td></tr>
+  <tr><td>"Kenapa Softmax?"</td><td>Multi-class classification (4 kelas). Softmax menghasilkan probabilitas positif yang totalnya 100%.</td></tr>
+  <tr><td>"Dropout buat apa?"</td><td>Matikan 50% neuron acak saat training → model tidak bergantung pada jalur tertentu → mencegah overfitting.</td></tr>
+  <tr><td>"EarlyStopping buat apa?"</td><td>Berhenti otomatis kalau model sudah tidak membaik 3 epoch berturut → mencegah overfitting, hemat waktu.</td></tr>
+  <tr><td>"Bagaimana AI tahu itu penyakit apa?"</td><td>Setiap penyakit punya visual signature unik (bercak oval=Brown Spot, diamond=Blast, kuning=Tungro). AI belajar pola ini sendiri dari data, BUKAN di-hardcode.</td></tr>
+  <tr><td>"Hubungan dengan SDG 2?"</td><td>Deteksi penyakit lebih awal → cegah gagal panen. Rekomendasi organik → pertanian berkelanjutan. Akses mudah via smartphone → bantu petani pemula.</td></tr>
+</table>
+
+<!-- Footer -->
+<div class="footer">
+  🌾 Agri Vision — Capstone Project · Panduan Belajar · 2025<br>
+  SDG 2: Zero Hunger · Deep Learning · Transfer Learning · MobileNetV2
+</div>
+
+</body>
+</html>
