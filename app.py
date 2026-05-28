@@ -106,13 +106,13 @@ def allowed_file(filename: str) -> bool:
 
 def preprocess_image(image_path: str) -> np.ndarray:
     """
-    Load an image, resize it to 224x224, and apply MobileNetV2 preprocessing.
-    This scales pixel values from [0, 255] to [-1, 1] to match training.
+    Load an image, resize it to 224x224, and prepare as float32 array.
+    NOTE: preprocess_input is already embedded inside the model graph,
+    so we only need to provide raw [0, 255] pixel values here.
     """
     img = Image.open(image_path).convert("RGB")
     img = img.resize(IMG_SIZE)
     img_array = np.array(img, dtype=np.float32)
-    img_array = tf.keras.applications.mobilenet_v2.preprocess_input(img_array)
     return np.expand_dims(img_array, axis=0)
 
 # ──────────────────────────────────────────────
