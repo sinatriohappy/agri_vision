@@ -12,6 +12,7 @@ Usage:
     python app.py
 """
 
+# Import required libraries for file handling and web server
 import os
 import numpy as np
 from flask import Flask, request, jsonify, render_template
